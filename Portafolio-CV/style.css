@@ -1,0 +1,797 @@
+/*Custom Properties*/
+:root {
+  --primary-color: #54422d;
+  --primary-alpha-color: rgba(84, 66, 45, 0.75);
+  --second-color: #011226;
+  --second-alpha-color: rgba(1, 18, 38, 0.75);
+  --third-color: #2b2110;
+  --third-alpha-color: rgba(43, 33, 16, 0.75);
+  --white-color: #ffffff;
+  --gray-light-color: #f4f4f4;
+  --gray-color: #d9d9d9;
+  --gray-dark-color: #5a5a5a;
+  --black-color: #000000;
+  --link-color: #4da279;
+  --title-color: #343434;
+  --text-color: #232323;
+  --white-alpha-color: rgba(255, 255, 255, 0.5);
+  --black-alpha-color: rgba(0, 0, 0, 0.5);
+  --font: "Mona Sans", "Inconsolata";
+  --max-width: 1200px;
+  --header-height: 4rem;
+}
+
+/*Reset*/
+html {
+  box-sizing: border-box; /*El tamaño de la caja empieza desde el borde y no desde el contenido*/
+  font-family: var(--font);
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  min-width: 100vw;
+  margin: 0;
+  overflow-x: hidden; /*Qué pasa con lo que desborda el contenedor? hidden=oculta. (Evita barra de desplazamiento, por ejemplo) */
+  /* color: var(--text-color); */
+}
+
+a {
+  color: var(--link-color);
+  transition: all 0.5 ease-out;
+}
+
+a:hover {
+  opacity: 0.75;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+h5 {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+h6 {
+  margin: 0;
+  font-size: 0.7rem;
+}
+
+img {
+  /*Imágenes responsivas*/
+  max-width: 100%;
+  height: auto;
+}
+
+p {
+  line-height: 1.6; /*Espaciado entre las líneas*/
+}
+
+/*---------------------------------COMPONENTS---------------------------------*/
+
+/*----------Carousel-----------*/
+
+@keyframes carousel-slide {
+  0% {
+    transform: translateX(0%);
+  }
+
+  25% {
+    transform: translateX(-25%);
+  }
+
+  50% {
+    transform: translateX(-50%);
+  }
+
+  75% {
+    transform: translateX(-75%);
+  }
+}
+
+.carousel {
+  margin: 2rem auto;
+  padding: 2rem 0;
+  max-width: 100vw;
+  /* text-align: center; */
+  overflow-x: hidden; /*Para ocultar los slides que quedan fuera del carousel*/
+  background-color: var(--carousel-bg-color);
+}
+
+.carousel .slides {
+  /*A la ul que tiene la class="slide" le aplicamos display:flex*/
+  display: flex;
+  list-style: none; /*Le quitamos las bullets a las li*/
+  /*Le sumamos 100% por cada slide*/
+  width: 400%;
+  padding-left: 0; /*Para que se centre, ya que la bullet no se ve pero aún está*/
+  transition: transform 0.5s ease-in-out;
+  animation: carousel-slide 12s ease-in-out 3s; /*Nombre de la animación, luego 12s de duración para los 4 slides, efecto ease-in-out y de delay 3s;*/
+}
+
+.carousel input {
+  /*A los input que estan dentro de carousel*/
+  display: none; /*Ocultamos los controles de cada checkbox*/
+}
+
+.carousel label {
+  /*A las label dentro de carousel*/
+  border: medium solid var(--gray-dark-color);
+  border-radius: 50%; /*Para que se haga circular*/
+  margin: 0 0.25rem; /*Para que se separen un poco a los lados. Arriba y abajo 0*/
+  display: inline-block; /*Para que tengan características de bloque, ya que las label trabajan en línea*/
+  /*Le daremos un ancho y altura definidos, ya que las label están vacías*/
+  width: 0.75rem;
+  height: 0.75rem;
+  cursor: pointer; /*Para que aparezca la manito(sea interactivo)*/
+}
+
+#slide-1:checked ~ .slides {
+  /*Cuando el slide-1 esté checked a la trama de .slides la posicionas en su origen, al 0%*/
+  transform: translateX(0%); /*A estos porcentajes debemos dividirlos por la cantidad de slides que tenemos*/
+}
+
+#slide-2:checked ~ .slides {
+  transform: translateX(-25%);
+}
+
+#slide-3:checked ~ .slides {
+  transform: translateX(-50%);
+}
+
+#slide-4:checked ~ .slides {
+  transform: translateX(-75%);
+}
+
+/*Cuando el selector slide-$ esté checked, a la label#dot-$ que está dentro de .slides-nav dale un color de fondo*/
+#slide-1:checked ~ .slides-nav label#dot-1,
+#slide-2:checked ~ .slides-nav label#dot-2,
+#slide-3:checked ~ .slides-nav label#dot-3,
+#slide-4:checked ~ .slides-nav label#dot-4 {
+  background-color: var(--gray-dark-color);
+}
+
+/*----------Contact Form-----------*/
+
+.contact-form {
+  margin: 2rem auto;
+  padding: 1rem;
+  max-width: 800px; /*Tamaño máximo que deseamos (en este caso que no ocupe el 100%)*/
+}
+
+.contact-form > * {
+  /*Todos los elementos que son hijos directos de .contact-form sin importar que tipo de etiqueta o selector es, le aplicamos lo siguiente*/
+  padding: 0.5rem; /*Hará que crezca el tamaño entre los placeholder y los input*/
+  margin: 1rem auto; /*Para que se separen entre ellos*/
+  display: block; /*Como trabajan en línea, le diremos que trabaje en bloque ya que necesitamos que uno vaya debajo del otro*/
+  width: 100%;
+}
+
+.contact-form input,
+.contact-form textarea {
+  /*Aplica a todos los input y textarea que están dentro de .contact-form*/
+  font-size: 0.85rem;
+  font-family: var(--font);
+}
+
+.contact-form input {
+  border: 0; /*Primero le quitamos los bordes para luego agregarle solo abajo*/
+  /* padding-left: 0; */ /*Le quitamos el padding izquierdo que queda cuando le quitamos los bordes*/
+  border-bottom: thin solid var(--gray-dark-color); /*Borde debajo*/
+}
+
+.contact-form textarea {
+  border: thin solid var(--gray-dark-color); /*Le damos borde a todo el textarea*/
+  resize: none; /*Le quitamos el resize para evitar que modifiquen el tamaño*/
+}
+
+.contact-form input[type="submit"] {
+  margin-top: 0;
+  cursor: pointer;
+  transition: all 0.5s ease-out;
+}
+
+.contact-form input[type="submit"]:hover {
+  opacity: 0.75;
+}
+
+.contact-form *::placeholder {
+  /*A todos elementos hijos que tengan la pseudoclase placeholder, le aplicamos*/
+  color: var(--gray-dark-color);
+}
+
+.contact-form-response {
+  /*Le aplicamos a la ventana modal con esta clase .contact-form-response*/
+  padding: 1rem;
+  width: 400px;
+  text-align: center;
+  background-color: var(--white-color);
+}
+
+.contact-form-response svg {
+  /*Editamos la carita feliz (SVG)*/
+  margin-top: 1rem;
+  width: 4rem;
+  height: 4rem;
+  fill: var(--primary-color);
+}
+
+.modal#gracias:target {
+  /*Para activar el id de la ventana modal con el mensaje de agradecimiento. Asi que cuando el elemento que tenga la clase modal y id gracias, cuando sea target de la página, aplicale...*/
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media screen and (min-width: 1024px) {
+  .contact-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 1rem; /*Espaciado entre columnas*/
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    /*Tamaño de fuente de los input y textarea*/
+    font-size: 1rem;
+  }
+
+  .contact-form textarea,
+  .contact-form-loader {
+    /*El textarea y el loader ocuparan 2 espacios (columns)*/
+    grid-column: span 2;
+  }
+
+  .contact-form input[type="submit"] {
+    margin-left: 0; /*Para que el botón se ubique a la izquerda*/
+  }
+}
+
+/*----------Hero Image-----------*/
+.hero-image {
+  background-image: var(--hero-image);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: var(--hero-attachment);
+}
+
+.hero-image img {
+  max-width: 100%;
+  height: auto;
+}
+
+.hero-image-opacity {
+  width: 100%;
+  min-height: 100vh;
+  display: flex; /*Para luego poder alinearlo y justificarlo*/
+  justify-content: center; /*Justificar*/
+  align-items: center; /*Alinear*/
+  text-align: center; /*Alinear texto*/
+  background-color: var(--hero-opacity-color); /*Variable creada dentro de style en el selector en html*/
+}
+
+.hero-image-title {
+  font-size: 7.5vw; /*Adecuamos el texto al tamaño de vw*/
+  color: var(--hero-text-color); /*Variable creada dentro de style en su selector en html*/
+}
+
+/*----------Menu-----------*/
+.menu-btn {
+  outline: thin solid var(--primary-color); /*Modificamos Outline (línea de afuera que viene por defecto) */
+  border: 0; /*Le quitamos el borde gris que trae por defecto*/
+  background-color: var(--second-color); /*Cambiamos el color de fondo que trae por defecto*/
+  cursor: pointer; /*Agregamos la manito en el cursor*/
+}
+
+.menu-btn svg {
+  fill: var(--primary-color); /*Le cambiamos el color a los SVG*/
+}
+
+.menu {
+  position: fixed; /*Le agregamos una position fixed*/
+  left: 0; /*Left 0 para que esté fijo a la izquierda*/
+  bottom: var(--header-height); /*En bottom le damos la altura de separación desde abajo, le damos el mismo tamaño de altura de headear para que se posicione justo arriba sin taparlo.*/
+  width: 100%; /*Anchura de 100% ya que con position:fixed pierde sus propiedades alto y ancho*/
+  display: flex; /*Le agregamos un display:flex con flex-direction en columna para acomodar los elementos*/
+  flex-direction: column;
+  background-color: var(--second-color); /*Color de fondo*/
+  opacity: 0; /*Para ocultarlo hasta que lo despleguemos le cambiamos la opacity a 0 ya que trae valor 1 por defecto*/
+  pointer-events: none; /*Para que al pasar el mouse no se activen los enlaces que acabamos de ocultar, le damos valor none a pointer-events*/
+  transition: opacity 0.5s ease; /*La transición que queremos para cuando se active*/
+}
+
+.menu.is-active {
+  /*Cuándo se activa el menú (USAMOS JAVASCRIPT para que la class="is-active" se agregue a la etiqueta <nav>)*/
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu a {
+  /*Le agregamos las siguientes propiedades a todos los enlaces dentro de .menu*/
+  padding: 1rem;
+  font-size: 1.5;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+.menu a:hover {
+  /*Le cambiamos el color de letra y el fondo al estado hover de los enlaces que estan dentro de .menu*/
+  color: var(--white-color);
+  background-color: var(--primary-color);
+}
+
+@media screen and (min-width: 1024px) {
+  .menu-btn {
+    display: none; /*Ocultamos el menú hamburguesa*/
+  }
+
+  .menu {
+    position: static; /*Le regresamos la posición al valor natural(static).(recordemos que estaba "fixed")*/
+    width: auto; /*Adaptamos auto al ancho*/
+    flex-direction: row; /*Alineamos en filas el flexbox*/
+    /*Ya que la class="is-active" le quitaba la opacity y el pointer-events, le tengo que regresar esas características*/
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .menu a {
+    padding: 0 1rem; /*A los enlaces dentro de .menu le aplicamos un padding top y bottom de 0 y conserva 1rem a los lados*/
+  }
+
+  .menu a:last-child {
+    padding-right: 0; /*Le quitamos el paddin right al útlimo enlace para que sea igual al "logo" */
+  }
+
+  .menu a:hover {
+    background-color: transparent; /*Quitamos el fondo en su estado hover*/
+  }
+}
+
+/*----------Modal-----------*/
+
+.modal {
+  position: fixed;
+  z-index: 999;
+  /*Para que ocupe toda la pantalla todos los valores en 0*/
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex; /*Le aplicamos Flexbox para luego justificarlo y alinearlo perfectamente*/
+  justify-content: center;
+  align-items: center;
+  background-color: var(--black-alpha-color);
+  /*Lo ocultamos con opacity 0 y pointer eventes none*/
+  opacity: 0;
+  pointer-events: none;
+  transition: all 1s; /*Transición para cuando lo veamos*/
+}
+
+.modal-content {
+  position: relative; /*Usamos este posicionamiento para luego posicionar el modal-close(x) en la esquina superior derecha*/
+}
+
+.modal-close {
+  /*Lo posicionamos en la esquina superior derecha*/
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.modal-close svg {
+  /*Acá le cambiamos el tamaño y el color al modal close (x)*/
+  width: 3rem;
+  height: 3rem;
+  fill: var(--primary-color);
+}
+
+.modal[id|="trabajo"]:target {
+  /*Cuando un elemento tenga la class .modal y en su atributo id empiece con la palabra "trabajo" le aplicamos lo siguiente*/
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/*----------Progress-----------*/
+/*Le damos estilo a las etiquetas <progress>, no a la clase (PRESTAR ATENCIÓN)*/
+progress {
+  width: 100%;
+  height: 1rem;
+  background-color: var(--gray-color);
+}
+/*Usaremos pseudoclases diferentes para asignarle color en navegadores diferentes, ya que tienen por defecto su color*/
+progress::-webkit-progress-bar {
+  /*Para asignarle color a la barra de progreso en navegadores webkit*/
+  background-color: var(--gray-color);
+}
+
+progress::-webkit-progress-value {
+  /*Para asignarle color al valor de la barra de progreso en navegadores webkit*/
+  background-color: var(--gray-dark-color);
+}
+
+progress::-moz-progress-bar {
+  /*Para asignarle color al valor de la barra de progreso en navegadores MOZILA FIREFOX*/
+  background-color: var(--gray-dark-color);
+}
+
+/*Ahora si le damos estilo a la class="progress"*/
+.progress {
+  margin: 1rem auto; /*1rem en top y bottom / auto en left y right*/
+}
+
+/*Le damos estilo a los párrafos dentro de la clase .progress*/
+.progress > p {
+  margin: 0;
+  /*Usamos FLEXBOX y justificamos space-between*/
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem; /*Disminuir la letra*/
+}
+
+/*-----------------------------UTILITIES-----------------------------*/
+
+.avatar {
+  /*Le creamos los estilos a las imágenes*/
+  border-radius: 50%; /*Con esto quedarán circulares (para esto la imagen debe tener forma de cuadrado*/
+  width: 150px;
+  height: 150px;
+}
+
+.bg-gray-light {
+  background-color: var(--gray-light-color);
+}
+
+.box-shadow-1 {
+  box-shadow: 0.25rem 0.25rem 1rem rgba(0, 0, 0, 0.25); /*Esto utilizaremos luego*/
+}
+
+.btn {
+  border-radius: 0.5rem; /*Radio del borde más curvo*/
+  padding: 1rem 0;
+  display: inline-block; /*Los enlaces trabajan en línea. Le agregamos inline-block para que tenga características de bloque y tenga cuerpo para poder aplicarle paddings laterales*/
+  width: 200px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: var(--white-color);
+  background-color: var(--primary-color);
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: var(--max-width); /*Creamos esta variable por si necesitamos modificar luego*/
+}
+
+.gray-scale {
+  filter: grayscale(1);
+}
+
+.none {
+  display: none;
+}
+
+.section {
+  padding: 2rem 1rem;
+}
+
+.section-title {
+  border-top: thin solid var(--primary-color); /*Borde solamente arriba*/
+  border-bottom: thin solid var(--primary-color); /*Borde solamente abajo*/
+  margin: 2rem auto; /*2rem arriba y abajo y auto a los lados para centrarlo*/
+  padding: 0.5rem 1rem; /*Nos ayudará a separar el texto de los bordes de la caja*/
+  width: 250px;
+  text-align: center;
+  color: var(--title-color);
+}
+
+.text-first-color {
+  color: var(--primary-color); /*Le damos color a los h3*/
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+@media screen and (min-width: 1024px) {
+  .full-lg-screen {
+    width: 100%; /*Para que ocupe el 100% del ancho*/
+    min-height: 100vh; /*Para que ocupe 100% de altura del viewport*/
+  }
+
+  .text-lg-center {
+    text-align: center;
+  }
+
+  .text-lg-left {
+    text-align: left;
+  }
+
+  .text-lg-right {
+    text-align: right;
+  }
+}
+
+/*---------------------------------SITE STYLES---------------------------------*/
+
+.about > article {
+  /*Vamos a aplicarle margin-bottom a todos los article dentro del elemento que contiene la clase ".about"*/
+  align-items: c;
+  margin-bottom: 2rem;
+}
+
+.contact-card {
+  margin: 1rem auto;
+  padding: 1rem;
+  width: 100%; /*Heredan el 100% de anchura del contenedor en donde están*/
+  height: 144px; /*144px es el tamaño que teníamos en FIGMA o similar*/
+  display: flex; /*Para alinear los elementos dentro de la card*/
+  flex-direction: column;
+  justify-content: space-around; /*Justificado repartido considerando las orillas*/
+  align-items: center;
+}
+
+.contact-card > svg {
+  /*Le cambiamos el tamaño y el color a los SVG en caso de que sean diferente*/
+  width: 2rem;
+  height: 2rem;
+  fill: var(--primary-color);
+}
+
+.contact-card > small {
+  margin-top: -1rem; /*Para que las etiquetas small se suban un poquito y se junten*/
+}
+
+.footer {
+  margin-bottom: var(--header-height);
+  padding: 0.5rem;
+  text-align: center;
+  color: var(--white-color);
+  background-color: var(--third-color);
+}
+
+.header {
+  /*Le damos posicionamiento "fijo" y le decimos que sea a la izquierda y abajo*/
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  /*Le agregamos z-index exagerado para que esté siempre al frente*/
+  z-index: 999;
+  /*Para que quede bien centrado probamos padding*/
+  padding: 1rem;
+  /*Al ser posicionado "fixed" pierde las propiedades de ancho y alto, entonces le agregamos*/
+  width: 100%;
+  height: var(--header-height); /*Creamos una variable que nos permita definir ese tamaño*/
+  background-color: var(--second-color); /*Agregamos background-color*/
+}
+
+.header > .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo a {
+  /*Al enlace dentro de logo*/
+  color: var(--primary-color); /*Color al enlace*/
+  font-weight: bold; /*Negrita al enlace*/
+  font-size: 2rem; /*Tamaño de font a 2rem, más el padding de 1rem que le dimos a .header en top y buttom completa 4rem que es el tamaño de nuestra height que le dimos creando la variable --header-heright.*/
+  text-decoration: none; /*Le quitamos el text decoration al enlace.*/
+}
+
+.portfolio-card {
+  position: relative; /*Para que luego en estado :hover posicionar de manera absoluta en relaciÓn a este contenedor*/
+  width: 100%;
+  margin: 0 auto; /*Le quitamos los márgenes para que estén pegadas*/
+  display: block; /*Para que estén uno debajo del otro necesitamos que trabajen en bloque*/
+}
+
+.portfolio-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /*Con esto evitamos que se pierda el aspecto si las imágenes no sos cuadradas, por ejemplo, como en este caso*/
+}
+
+.portfolio-card-info {
+  position: absolute;
+  /*top y left 0 para que se posicione junto a su elemento padre*/
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  background-color: var(--primary-alpha-color);
+  color: var(--white-color);
+  opacity: 0; /*Para que no se vea hasta que nosotros decidamos luego en :hover*/
+  pointer-events: none; /*Para que deje de tener actividad mientras la ocultamos con opacity: 0; recién*/
+  transition: all 0.5s ease-in-out; /*Estilo de transición al aparecer/ocultarse*/
+}
+
+/*Cuando portfolio-card esté en su estado :hover a .portfolio-card-info le devolvemos la opacity y pointer-events para que se vea y tenga actividad nuevamente*/
+.portfolio-card:hover .portfolio-card-info {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.portfolio-card-info > div {
+  /*A la div que está dentro de portfolio-card-info*/
+  padding: 1rem;
+  border: thin solid var(--white-color); /*Color de línea que se ve alrededor del párrafo*/
+  width: 100%;
+  height: 100%;
+}
+
+.portfolio-modal {
+  padding: 1rem;
+  display: flex; /*Agregamos flex para asegurarnos que esté en columna con flex-direction*/
+  flex-direction: column;
+  max-width: 400px;
+  background-color: var(--white-color);
+}
+
+.portfolio-modal h3 {
+  border-bottom: medium solid var(--primary-color); /*Borde debajo tipo subrayado*/
+  margin: 1 auto; /*Márgenes de 1 arriba y abajo y auto a los lados*/
+  padding: 0.5rem 0; /*Padding arriba y abajo de 0.5rem y a los lados 0*/
+  color: var(--title-color); /*Color de texto*/
+}
+
+.portfolio-details {
+  display: grid;
+  grid-template-columns: 40% 60%; /*al detalle 40% y a la descripción de ese detalle 60%*/
+  grid-auto-rows: 2rem; /*Este será el valor de las filas que se generer implicitamente*/
+}
+
+.portfolio-details b {
+  /*Le aplicamos a todas las etiquetas "b" dentro de .portfolio-details*/
+  color: var(--primary-color);
+}
+
+.service-card {
+  margin: 1rem auto; /*Para centrarlo*/
+  padding: 1rem; /*Para que se separe un poco del texto*/
+  text-align: center;
+}
+
+/*Aplicar estilo a los h3 dentro de service-card*/
+.service-card h3 {
+  color: var(--title-color);
+}
+
+/*Aplicar estilo a los svg dentro de service-card*/
+.service-card svg {
+  margin-bottom: 1.25rem;
+  fill: var(--primary-color);
+}
+
+.social-media a {
+  /*A los enlaces que (recordemos) tienen los svg dentro los separamos un poco y le quietamos el text-decorection (underline que tienen los enlaces)*/
+  padding: 0 0.4rem;
+  text-decoration: none;
+}
+
+.social-media svg {
+  /*Le cambiamos el tamaño a los svg */
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+@media screen and (min-width: 768px) {
+  .contact-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 48%); /*El 4% restante será para el espacio entre ellos en el justificado (space-between)*/
+    justify-content: space-between;
+  }
+
+  .portfolio > .container {
+    /*A la div .container dentro de .portfolio le agregamos display grid y lo hacemos de 2 columnas*/
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+  }
+
+  /*Al título le decimos que ocupe 2 espacios desde donde está*/
+  .portfolio .section-title {
+    grid-column: span 2;
+  }
+
+  .portfolio-modal {
+    max-width: 800px; /*Para que entre el texto también horizontalmente*/
+    flex-direction: row; /*Como ya tiene display: flex; simplemente le cambiamos la dirección, de column a row*/
+  }
+
+  .portfolio-info {
+    margin-left: 1rem; /*Margen para que no esté tan pegado a la imagen*/
+    align-self: center; /*Para alinear solamente este hijo usamos algin-self, y lo hacemos al centro*/
+  }
+
+  .services > .container {
+    display: grid;
+    grid-template-columns: repeat(2, 45%); /*Quedará un 10% libre para el justificado*/
+    justify-content: space-between; /*Justificado entre ellos*/
+    align-content: center; /*Contenido alineado al centro*/
+  }
+
+  /*Al section-title (título) que está dentro de services le vamos a dar propiedades para que no se acomode en una columna como las tarjetas, sino en dos*/
+  .services .section-title {
+    grid-column: span 2; /*Le decimos que ocupe dos espacios desde donde está*/
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .about {
+    display: grid; /*Esta grid  nos ayuda a posicionar los elementos horizontalmente (en este caso(columns))*/
+    grid-template-columns: repeat(3, 30%); /*Creamos 3 columnas de 30% c/u*/
+    justify-content: space-between; /*Justificadas con espacio proporcional entre ellas*/
+    align-content: center; /*Alineadas al centro*/
+  }
+
+  .contact-cards {
+    /*Como ya tenemos el display grid, acá no lo necesitamos. Simplemente le damos grid-template-columns que se repita 4 veces 24% y el restante también será 4% para la justificación entre ellos, que tampoco necesitamos colocarla acá.*/
+    grid-template-columns: repeat(4, 24%);
+  }
+
+  .footer {
+    margin-bottom: 0;
+  }
+
+  .header {
+    position: sticky; /*A la altura que le definamos quedará fijo, pero a diferencia de "position:fixed", no tapará el contenido que está inmediatamente después definido en el html*/
+    top: 0; /*Para que se vuelva fijo cuando toque el margen top*/
+    padding: 0.5rem; /*Reducimes el padding*/
+    height: calc(var(--header-height) - 0.5rem); /*Le restamos 0.5rem al valor de la variable para que el tamaño de los padding sea proporcional*/
+  }
+
+  .portfolio > .container {
+    /*A la div .container dentro de .portfolio la hacemos de 3 columnas*/
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /*Acá le decimos que se repita 3 veces en fracciones iguales, ya que el resultado de 100 entre 3 es un número decimal (33,333...)*/
+  }
+
+  /*Al título le decimos que ocupe 3 espacios desde donde está*/
+  .portfolio .section-title {
+    grid-column: span 3;
+  }
+
+  .services > .container {
+    grid-template-columns: repeat(3, 30%); /*Quedará un 10% libre para el justificado*/
+  }
+
+  /*Al section-title (título) que está dentro de services le vamos a dar propiedades para que no se acomode en una columna como las tarjetas, sino en tres para DESKTOP*/
+  .services .section-title {
+    grid-column: span 3; /*Le decimos que ocupe tres espacios desde donde está*/
+  }
+}
